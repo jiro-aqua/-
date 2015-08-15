@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">路線検索</string>
+    <string name="app_title">かんたん路線検索</string>
+    <string name="label_saddr">出発</string>
+    <string name="label_daddr">到着</string>
+    <string name="label_datetime">日時</string>
+    <string name="label_date">日付</string>
+    <string name="label_exp">有料特急</string>
+    <string name="label_airline">空路</string>
+    <string name="label_search_button">検索</string>
+    <string name="space">　</string>
+    <string name="select_button_text">選択</string>
+    <string name="label_type_departure">出発</string>
+    <string name="label_type_arrival">到着</string>
+    <string name="label_type_last">終電</string>
+    <string name="label_type_first">始発</string>
+    <string name="label_sort_time">時間順</string>
+    <string name="label_sort_fare">料金順</string>
+    <string name="label_sort_num">乗換回数順</string>
+    <string name="message_empty">登録されているデータがありません。</string>
+    <string name="label_register">登録</string>
+    <string name="label_bystation">経由</string>
+    <string name="label_cancel">キャンセル</string>
+    <string name="label_time_button">時刻指定</string>
+    <string name="menu_remove">削除</string>
+    <string name="menu_move_to_top">先頭へ移動</string>
+    <string name="time_format">HH時mm分</string>
+    <string name="label_iccard">ICカード</string>
+    <string name="label_ticket">切符</string>
+    <string name="label_shinkansen">新幹線</string>
+    <string name="label_highwaybus">高速バス</string>
+    <string name="label_localbus">路線バス</string>
+    <string name="label_ferry">フェリー</string>
+    <string name="label_walkspeed">歩き方</string>
+    <string name="label_createicon">アイコン作成</string>
+    <string name="message_withtime">アイコン作成時に時刻指定を削除しますか？\n(削除するとアイコンを押した時刻で検索を行います)</string>
+    <string name="label_ok">OK</string>
+    <string name="label_yes">はい</string>
+    <string name="label_no">いいえ</string>
+    <string name="hint_from_to">駅名、住所、施設名</string>
+    <string name="hint_via">スペース区切りで複数入力</string>
+    <string name="menu_oss">オープンソースライセンス</string>
+
+</resources>

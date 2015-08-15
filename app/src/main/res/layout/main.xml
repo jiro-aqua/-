@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100.0">
+
+                <TextView
+                    android:id="@+id/faddr_text"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10.0"
+                    android:text="@string/label_saddr"/>
+
+                <EditText
+                    android:id="@+id/faddr_edit"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="65.0"
+                    android:hint="@string/hint_from_to"
+                    android:inputType="text"
+                    />
+
+                <Button
+                    android:id="@+id/faddr_button"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25.0"
+                    android:text="@string/select_button_text"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100.0">
+
+                <TextView
+                    android:id="@+id/taddr_text"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10.0"
+                    android:text="@string/label_daddr"/>
+
+                <EditText
+                    android:id="@+id/taddr_edit"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="65.0"
+                    android:hint="@string/hint_from_to"
+                    android:inputType="text"/>
+
+                <Button
+                    android:id="@+id/taddr_button"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25.0"
+                    android:text="@string/select_button_text"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100.0">
+
+                <TextView
+                    android:id="@+id/via_text"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10.0"
+                    android:text="@string/label_bystation"/>
+
+                <EditText
+                    android:id="@+id/via_edit"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="65.0"
+                    android:imeOptions="actionDone"
+                    android:hint="@string/hint_via"
+                    android:inputType="text"/>
+
+                <Button
+                    android:id="@+id/via_button"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25.0"
+                    android:text="@string/select_button_text"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100.0">
+
+                <TextView
+                    android:id="@+id/delay_text"
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="10.0"
+                    android:text="@string/label_datetime"/>
+
+                <LinearLayout
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40.0"
+                    android:minWidth="95.0dip"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/delay_display_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textSize="16.0sp"/>
+
+                    <Spinner
+                        android:id="@+id/delay_spinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/time_select_button_array" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50.0"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/time_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textSize="16.0sp"/>
+
+                    <Button
+                        android:id="@+id/time_button"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_time_button"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/type_departure"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30.0"
+                        android:checked="true"
+                        android:text="@string/label_type_departure"/>
+
+                    <RadioButton
+                        android:id="@+id/type_arrival"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30.0"
+                        android:text="@string/label_type_arrival"/>
+
+                    <RadioButton
+                        android:id="@+id/type_first"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30.0"
+                        android:text="@string/label_type_first"/>
+
+                    <RadioButton
+                        android:id="@+id/type_last"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30.0"
+                        android:text="@string/label_type_last"/>
+
+                </RadioGroup>
+
+                <RadioGroup
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <RadioButton
+                        android:id="@+id/sort_time"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30.0"
+                        android:checked="true"
+                        android:text="@string/label_sort_time"/>
+
+                    <RadioButton
+                        android:id="@+id/sort_fare"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30.0"
+                        android:text="@string/label_sort_fare"/>
+
+                    <RadioButton
+                        android:id="@+id/sort_num"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60.0"
+                        android:text="@string/label_sort_num"/>
+
+                </RadioGroup>
+
+                <RadioGroup
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/ticket_ic"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30.0"
+                        android:checked="true"
+                        android:text="@string/label_iccard"/>
+
+                    <RadioButton
+                        android:id="@+id/ticket_normal"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="90.0"
+                        android:text="@string/label_ticket"/>
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="100.0">
+
+                    <CheckBox
+                        android:id="@+id/express"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="33.0"
+                        android:checked="false"
+                        android:text="@string/label_exp"/>
+
+                    <CheckBox
+                        android:id="@+id/shinkansen"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="33.0"
+                        android:checked="false"
+                        android:text="@string/label_shinkansen"/>
+
+                    <CheckBox
+                        android:id="@+id/airline"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="34.0"
+                        android:checked="false"
+                        android:text="@string/label_airline"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="100.0">
+
+                    <CheckBox
+                        android:id="@+id/highwaybus"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="33.0"
+                        android:checked="false"
+                        android:text="@string/label_highwaybus"/>
+
+                    <CheckBox
+                        android:id="@+id/localbus"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="33.0"
+                        android:checked="true"
+                        android:text="@string/label_localbus"/>
+
+                    <CheckBox
+                        android:id="@+id/ferry"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="34.0"
+                        android:checked="false"
+                        android:text="@string/label_ferry"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_walkspeed"/>
+
+                    <Spinner
+                        android:id="@+id/walkspeed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/walk_speed"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/create_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="@string/label_createicon"
+            android:textSize="12sp"/>
+        <Button
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:singleLine="true"
+            android:text="@string/label_search_button"
+            android:textSize="24.5sp"/>
+    </LinearLayout>
+
+</LinearLayout>

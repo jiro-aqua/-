@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="walk_speed_values">
+        <item>2</item>
+        <item>1</item>
+        <item>3</item>
+        <item>4</item>
+    </integer-array>
+    <string-array name="walk_speed">
+        <item>普通</item>
+        <item>急いで</item>
+        <item>少しゆっくり</item>
+        <item>ゆっくり</item>
+    </string-array>
+    <string-array name="time_select_button_array">
+        <item> </item>
+        <item>現在</item>
+        <item>1分後</item>
+        <item>3分後</item>
+        <item>5分後</item>
+        <item>8分後</item>
+        <item>10分後</item>
+        <item>15分後</item>
+        <item>20分後</item>
+        <item>30分後</item>
+        <item>40分後</item>
+        <item>50分後</item>
+        <item>60分後</item>
+        <item>70分後</item>
+        <item>80分後</item>
+        <item>90分後</item>
+    </string-array>
+    <integer-array name="time_select_delay_array">
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>8</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+        <item>70</item>
+        <item>80</item>
+        <item>90</item>
+    </integer-array>
+</resources>
