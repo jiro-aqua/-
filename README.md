@@ -6,7 +6,7 @@
 
 アプリについての連絡先
 - mail pandora@aquamarine.sakura.ne.jp
-- twitter @jiro_aqua
+- twitter [@jiro_aqua](https://twitter.com/jiro_aqua)
 
 アイコン制作は宮比のん様です。
 - Google+ https://plus.google.com/106568890041050911189
