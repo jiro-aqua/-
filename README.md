@@ -1,8 +1,11 @@
-# かんたん路線検索
+## かんたん路線検索
 - 簡単な操作でYahoo!路線情報を呼び出すだけのAndroidアプリです。
 - 路線ドロイドのコア機能のクローンアプリとして作りました。
 
 本アプリは、Kotlin/RxAndroid/RxKotlin/RxBindingを使用しています。
+
+## 配布場所
+[Google Play Store - かんたん路線検索](https://play.google.com/store/apps/details?id=jp.gr.aqua.rosen&hl=ja)
 
 ## アプリについての連絡先
 - mail pandora@aquamarine.sakura.ne.jp
@@ -14,7 +17,7 @@
 
 (c)2015 Aquamarine Networks, All Rights Reserved.
 
-# LICENSE
+## LICENSE
 
 ```
 Copyright (C) 2015 Aquamarine Networks.
