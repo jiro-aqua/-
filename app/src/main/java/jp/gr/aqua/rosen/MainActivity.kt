@@ -29,13 +29,13 @@ public class MainActivity : AppCompatActivity() {
     var delayMinutes = 0
     var time: Calendar? = null
 
-    var delays : IntArray by Delegates.notNull()
-    var walkSpeeds : IntArray by Delegates.notNull()
-    var delayNames : Array<String> by Delegates.notNull()
-
-    var settings : Settings by Delegates.notNull()
+    val delays : IntArray by Delegates.lazy { getResources().getIntArray(R.array.time_select_delay_array)    }
+    val walkSpeeds : IntArray by Delegates.lazy { getResources().getIntArray(R.array.walk_speed_values)    }
+    val delayNames : Array<String> by Delegates.lazy { getResources().getStringArray(R.array.time_select_button_array) }
+    val settings : Settings by Delegates.lazy { Settings( getApplicationContext() ) }
 
     val optionsMenuClickObservable = PublishSubject<MenuItem>()
+    val activityResultObservable = PublishSubject<Triple<Int, Int, Intent?>>()
 
     enum class RequestCode(val code:Int) {
         FADDR(1),
@@ -49,12 +49,6 @@ public class MainActivity : AppCompatActivity() {
         setTitle(R.string.app_title)
         setContentView(R.layout.main)
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-
-        delays = getResources().getIntArray(R.array.time_select_delay_array)
-        delayNames = getResources().getStringArray(R.array.time_select_button_array)
-        walkSpeeds = getResources().getIntArray(R.array.walk_speed_values)
-
-        settings = Settings( this.getApplicationContext() )
 
         load()
 
@@ -142,18 +136,19 @@ public class MainActivity : AppCompatActivity() {
             val message = getAssets().open("LICENSE.TXT").reader(charset = Charsets.UTF_8 ).use { it.readText() }
             AlertDialog.Builder(this).setTitle(R.string.menu_oss).setMessage(message).setPositiveButton(R.string.label_ok,null).show()
         })
+        val resultOk = activityResultObservable.filter { it.second == Activity.RESULT_OK && it.third!=null }.map { Pair(it.first,StationPickerActivity.getAddress(it.third!!)) }
+        subscriptions.add( Observable.merge(
+                resultOk.filter { it.first == RequestCode.FADDR.code }.map {Pair(faddr_edit, it.second)},
+                resultOk.filter { it.first == RequestCode.TADDR.code }.map {Pair(taddr_edit, it.second)}
+                ).subscribe {it.first.setText(it.second)})
+        subscriptions.add( resultOk.filter { it.first == RequestCode.VIA.code }.subscribe {
+            via_edit.setText("${via_edit.getText()} ${it.second}")
+        })
    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if ( resultCode == Activity.RESULT_OK && data != null ){
-            val addr = StationPickerActivity.getAddress(data)
-            when( requestCode ){
-                RequestCode.FADDR.code -> faddr_edit.setText(addr)
-                RequestCode.TADDR.code -> taddr_edit.setText(addr)
-                RequestCode.VIA.code -> via_edit.setText("${via_edit.getText()} ${addr}")
-            }
-        }
+        activityResultObservable.onNext(Triple(requestCode, resultCode, data))
     }
 
     override fun onPause() {

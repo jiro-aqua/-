@@ -23,10 +23,10 @@ import kotlin.properties.Delegates
 public class StationPickerActivity : AppCompatActivity() {
 
     val subscriptions = CompositeSubscription()
-    var sp : SharedPreferences by Delegates.notNull()
+    val sp : SharedPreferences by Delegates.lazy {getSharedPreferences("stations", Context.MODE_PRIVATE )}
 
     val stations = arrayListOf("--")
-    var stationAdapter : ArrayAdapter<String> by Delegates.notNull()
+    val stationAdapter : ArrayAdapter<String> by Delegates.lazy { ArrayAdapter<String>(this,R.layout.location_list_row,  stations) }
 
     val contextMenuClickObservable = PublishSubject<MenuItem>()
 
@@ -38,8 +38,6 @@ public class StationPickerActivity : AppCompatActivity() {
         val init = getIntent().getStringExtra(EXTRA_INITIAL_STRING)
         init?.let { station_edit.setText(it) }
 
-        sp = getSharedPreferences("stations", Context.MODE_PRIVATE )
-        stationAdapter = ArrayAdapter<String>(this,R.layout.location_list_row,  stations)
         list.setAdapter(stationAdapter)
         registerForContextMenu(list)
 
