@@ -2,14 +2,13 @@ package jp.gr.aqua.rosen
 
 import android.content.Context
 import android.content.SharedPreferences
+import rx.Observable
+import rx.Subscription
+import rx.subscriptions.Subscriptions
 import kotlin.properties.Delegates
 
-abstract open public class PrefUtil(val context : Context , val prefName : String) {
-    private var sp : SharedPreferences by Delegates.notNull()
-    init {
-        sp = context.getSharedPreferences(prefName,Context.MODE_PRIVATE)
-    }
-
+abstract open public class PrefUtil(val sp : SharedPreferences )
+{
     private var edit : SharedPreferences.Editor? = null
 
     public fun edit( f : (Unit)->Unit ) {
@@ -28,14 +27,16 @@ abstract open public class PrefUtil(val context : Context , val prefName : Strin
         return sp.getAll()
     }
 
-    public fun registerOnSharedPreferenceChangeListener(listener : SharedPreferences.OnSharedPreferenceChangeListener ){
-        sp.registerOnSharedPreferenceChangeListener(listener)
+    public fun keyChanges() : Observable<String> {
+        return Observable.create {
+            subscriber->
+            val listener = SharedPreferences.OnSharedPreferenceChangeListener {
+                sp, key ->  subscriber.onNext(key);
+            }
+            subscriber.add( Subscriptions.create {  sp.unregisterOnSharedPreferenceChangeListener(listener) })
+            sp.registerOnSharedPreferenceChangeListener(listener)
+        }
     }
-
-    public fun unregisterOnSharedPreferenceChangeListener(listener : SharedPreferences.OnSharedPreferenceChangeListener ){
-        sp.unregisterOnSharedPreferenceChangeListener(listener)
-    }
-    // そのうちここからobserve()を生やしたい。
 
     public fun contains(key:String) : Boolean{
         return sp.contains(key)

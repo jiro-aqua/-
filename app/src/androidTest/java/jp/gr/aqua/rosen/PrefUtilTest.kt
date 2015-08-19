@@ -10,6 +10,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import rx.observers.TestSubscriber
 import kotlin.properties.Delegates
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -32,7 +33,7 @@ public class PrefUtilTest : TestCase() {
         super.tearDown()
     }
 
-    private class SampleSettings(context : Context) : PrefUtil(context , "testpref"){
+    private class SampleSettings(context : Context) : PrefUtil( context.getSharedPreferences("testpref", Context.MODE_PRIVATE) ){
         var intSample0 by PrefUtil.IntPref(0)
         var intSample2 by PrefUtil.IntPref(2)
         var booleanSampleTrue by PrefUtil.BooleanPref(true)
@@ -63,7 +64,7 @@ public class PrefUtilTest : TestCase() {
         s.longSample  = 12300000L
         s.floatSample = 150.56F
         s.stringSample = "next generation"
-        s.stringSetSample = arrayOf("one","two").toSet()
+        s.stringSetSample = setOf("one","two")
 
         assertEquals( s.intSample0 , 5 )
         assertEquals( s.intSample2 , -1 )
@@ -72,7 +73,7 @@ public class PrefUtilTest : TestCase() {
         assertEquals( s.longSample , 12300000L )
         assertEquals( s.floatSample , 150.56F )
         assertEquals( s.stringSample , "next generation")
-        assertEquals( s.stringSetSample, arrayOf("one","two").toSet() )
+        assertEquals( s.stringSetSample, setOf("one","two") )
 
         s.edit {
             s.intSample0 = 8
@@ -82,7 +83,7 @@ public class PrefUtilTest : TestCase() {
             s.longSample  = 5L
             s.floatSample = 0.1F
             s.stringSample = "end"
-            s.stringSetSample = arrayOf("1","2").toSet()
+            s.stringSetSample = setOf("1","2")
         }
         assertEquals( s.intSample0 , 8 )
         assertEquals( s.intSample2 , 100 )
@@ -91,12 +92,37 @@ public class PrefUtilTest : TestCase() {
         assertEquals( s.longSample , 5L )
         assertEquals( s.floatSample , 0.1F )
         assertEquals( s.stringSample , "end")
-        assertEquals( s.stringSetSample, arrayOf("1","2").toSet() )
+        assertEquals( s.stringSetSample, setOf("1","2") )
 
         assertTrue( s.contains("stringSetSample") )
         assertFalse( s.contains("doubleSample") )
 
     }
 
+    Test
+    public fun testKeyChanges() {
+        val s = SampleSettings(mContext)
+        s.reset()
+        val testSubscriber = TestSubscriber<String>()
+        val subscription = s.keyChanges().subscribe(testSubscriber)
 
+        testSubscriber.assertNoErrors()
+
+        s.intSample0 = 100
+        s.stringSample = "aaa"
+        Thread.sleep(100)
+        assertEquals(testSubscriber.getOnNextEvents().get(0) , "intSample0")
+        assertEquals(testSubscriber.getOnNextEvents().get(1) , "stringSample")
+
+        assertEquals( testSubscriber.getOnNextEvents().count() , 2 )
+
+        subscription.unsubscribe()
+
+        s.intSample0 = 10
+        s.stringSample = "bbb"
+        Thread.sleep(100)
+
+        assertEquals( testSubscriber.getOnNextEvents().count() , 2 )
+
+    }
 }

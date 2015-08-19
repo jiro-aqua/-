@@ -2,7 +2,7 @@ package jp.gr.aqua.rosen
 
 import android.content.Context
 
-public class Settings(context : Context) : PrefUtil(context,"settings"){
+public class Settings(context : Context) : PrefUtil(context.getSharedPreferences("settings",Context.MODE_PRIVATE)){
     var type_departure : Boolean by PrefUtil.BooleanPref(true)
     var type_arrival : Boolean by PrefUtil.BooleanPref(false)
     var type_first : Boolean by PrefUtil.BooleanPref(false)
