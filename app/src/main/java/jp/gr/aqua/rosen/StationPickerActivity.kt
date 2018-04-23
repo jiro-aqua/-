@@ -13,22 +13,20 @@ import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import kotlinx.android.synthetic.location_list.*
+import kotlinx.android.synthetic.main.location_list.*
 import rx.Observable
-import rx.lang.kotlin.PublishSubject
+import rx.subjects.PublishSubject
 import rx.subscriptions.CompositeSubscription
-import kotlin.platform.platformStatic
-import kotlin.properties.Delegates
 
 public class StationPickerActivity : AppCompatActivity() {
 
     val subscriptions = CompositeSubscription()
-    val sp : SharedPreferences by Delegates.lazy {getSharedPreferences("stations", Context.MODE_PRIVATE )}
+    val sp : SharedPreferences by lazy {getSharedPreferences("stations", Context.MODE_PRIVATE )}
 
     val stations = arrayListOf("--")
-    val stationAdapter : ArrayAdapter<String> by Delegates.lazy { ArrayAdapter<String>(this,R.layout.location_list_row,  stations) }
+    val stationAdapter : ArrayAdapter<String> by lazy { ArrayAdapter<String>(this,R.layout.location_list_row,  stations) }
 
-    val contextMenuClickObservable = PublishSubject<MenuItem>()
+    val contextMenuClickObservable = PublishSubject.create<MenuItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +53,7 @@ public class StationPickerActivity : AppCompatActivity() {
         })
         // 入力欄の内容で登録ボタンを無効化
         subscriptions.add(station_edit.textChanges().subscribe {
-            station_register.setEnabled( it.length() != 0 )
+            station_register.setEnabled( it.length != 0 )
         })
         // リストのアイテムクリック
         subscriptions.add(list.itemClickEvents().subscribe {
@@ -89,7 +87,7 @@ public class StationPickerActivity : AppCompatActivity() {
 //        バリュー値で降順にソートして、
 //        stationsの中にキー値を格納する。
 //        ※ここはRxJavaではなく、KotlinのコレクションAPIで操作
-        sp.getAll().map { Pair(it.getKey(), it.getValue() as Long ) }.sortBy { -it.second }.mapTo(stations) { it.first }
+        sp.getAll().map { it.key to it.value as Long }.sortedBy { -it.second }.mapTo(stations) { it.first }
         stationAdapter.notifyDataSetChanged()
     }
 
@@ -111,13 +109,13 @@ public class StationPickerActivity : AppCompatActivity() {
     }
 
     companion object {
-        platformStatic public fun getStartIntent(context : Context, init: String?) : Intent{
-            val intent = Intent( context , javaClass<StationPickerActivity>() )
+        @JvmStatic public fun getStartIntent(context : Context, init: String?) : Intent{
+            val intent = Intent( context , StationPickerActivity::class.java )
             init?.let { intent.putExtra(EXTRA_INITIAL_STRING, init ) }
             return intent
         }
 
-        platformStatic public fun getAddress(intent : Intent) : String {
+        @JvmStatic public fun getAddress(intent : Intent) : String {
             return intent.getStringExtra(EXTRA_ADDRESS)!!
         }
 

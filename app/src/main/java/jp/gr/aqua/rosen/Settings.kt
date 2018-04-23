@@ -3,25 +3,25 @@ package jp.gr.aqua.rosen
 import android.content.Context
 
 public class Settings(context : Context) : PrefUtil(context.getSharedPreferences("settings",Context.MODE_PRIVATE)){
-    var type_departure : Boolean by PrefUtil.BooleanPref(true)
-    var type_arrival : Boolean by PrefUtil.BooleanPref(false)
-    var type_first : Boolean by PrefUtil.BooleanPref(false)
-    var type_last : Boolean by PrefUtil.BooleanPref(false)
+    var typeDeparture by booleanPref(true)
+    var typeArrival by booleanPref(false)
+    var typeFirst by booleanPref(false)
+    var typeLast by booleanPref(false)
 
-    var sort_time : Boolean by PrefUtil.BooleanPref(true)
-    var sort_fare : Boolean by PrefUtil.BooleanPref(false)
-    var sort_num : Boolean by PrefUtil.BooleanPref(false)
+    var sortTime by booleanPref(true)
+    var sortFare by booleanPref(false)
+    var sortNum by booleanPref(false)
 
-    var ticket_ic : Boolean by PrefUtil.BooleanPref(true)
-    var ticket_normal : Boolean by PrefUtil.BooleanPref(false)
+    var ticketIc by booleanPref(true)
+    var ticketNormal by booleanPref(false)
 
-    var express : Boolean by PrefUtil.BooleanPref(false)
-    var shinkansen : Boolean by PrefUtil.BooleanPref(false)
-    var airline : Boolean by PrefUtil.BooleanPref(false)
-    var highwaybus : Boolean by PrefUtil.BooleanPref(false)
-    var localbus : Boolean by PrefUtil.BooleanPref(true)
-    var ferry : Boolean by PrefUtil.BooleanPref(false)
+    var Express  by booleanPref(false)
+    var Shinkansen by booleanPref(false)
+    var Airline by booleanPref(false)
+    var highwayBus by booleanPref(false)
+    var localBus by booleanPref(true)
+    var Ferry by booleanPref(false)
 
-    var walkspeed : Int by PrefUtil.IntPref(0)
+    var walkSpeed by intPref(0)
 }
 

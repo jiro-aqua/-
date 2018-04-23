@@ -12,14 +12,22 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
-import kotlinx.android.synthetic.main.*
+import kotlinx.android.synthetic.main.main.*
 import rx.Observable
-import rx.lang.kotlin.PublishSubject
+import rx.subjects.PublishSubject
 import rx.subscriptions.CompositeSubscription
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import kotlin.properties.Delegates
+import java.util.*
+import android.support.v4.content.pm.ShortcutManagerCompat.requestPinShortcut
+import android.app.PendingIntent
+import android.support.v4.content.pm.ShortcutManagerCompat.createShortcutResultIntent
+import android.content.pm.ShortcutInfo
+import android.support.v4.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported
+import android.content.pm.ShortcutManager
+import android.os.Build
+import android.annotation.TargetApi
+import android.graphics.drawable.Icon
 
 
 public class MainActivity : AppCompatActivity() {
@@ -29,13 +37,13 @@ public class MainActivity : AppCompatActivity() {
     var delayMinutes = 0
     var time: Calendar? = null
 
-    val delays : IntArray by Delegates.lazy { getResources().getIntArray(R.array.time_select_delay_array)    }
-    val walkSpeeds : IntArray by Delegates.lazy { getResources().getIntArray(R.array.walk_speed_values)    }
-    val delayNames : Array<String> by Delegates.lazy { getResources().getStringArray(R.array.time_select_button_array) }
-    val settings : Settings by Delegates.lazy { Settings( getApplicationContext() ) }
+    val delays : IntArray by lazy { getResources().getIntArray(R.array.time_select_delay_array)    }
+    val walkSpeeds : IntArray by lazy { getResources().getIntArray(R.array.walk_speed_values)    }
+    val delayNames : Array<String> by lazy { getResources().getStringArray(R.array.time_select_button_array) }
+    val settings : Settings by lazy { Settings( getApplicationContext() ) }
 
-    val optionsMenuClickObservable = PublishSubject<MenuItem>()
-    val activityResultObservable = PublishSubject<Triple<Int, Int, Intent?>>()
+    val optionsMenuClickObservable = PublishSubject.create<MenuItem>()
+    val activityResultObservable = PublishSubject.create<Triple<Int, Int, Intent?>>()
 
     enum class RequestCode(val code:Int) {
         FADDR(1),
@@ -107,7 +115,7 @@ public class MainActivity : AppCompatActivity() {
         })
         // 発着駅のフィールドが空白の時は検索ボタンを無効化
         subscriptions.add(Observable.combineLatest(faddr_edit.textChanges(),taddr_edit.textChanges()){
-            from, to -> from.length() > 0 && to.length() > 0 && !from.toString().equals(to.toString())
+            from, to -> from.length > 0 && to.length > 0 && !from.toString().equals(to.toString())
         }.subscribe{
             search.setEnabled(it)
             create_icon.setEnabled(it)
@@ -296,65 +304,102 @@ public class MainActivity : AppCompatActivity() {
     private fun createIcon(withTime : Boolean )
     {
         val targetIntent = Intent( Intent.ACTION_VIEW , Uri.parse(makeQuery(withTime)) )
+        val name = "${faddr_edit.getText()}.${taddr_edit.getText()}"
 
-        val intent = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
-        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, targetIntent);
-        intent.putExtra("duplicate", false);
+        if ( Build.VERSION.SDK_INT < Build.VERSION_CODES.O ) {
 
-        val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_shortcut );
-        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "${faddr_edit.getText()}.${taddr_edit.getText()}");
+            val intent = Intent("com.android.launcher.action.INSTALL_SHORTCUT")
+            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, targetIntent);
+            intent.putExtra("duplicate", false);
 
-        sendBroadcast(intent);
+            val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_shortcut);
+            intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+            intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+
+            sendBroadcast(intent);
+        }else{
+            createPinnedShortcut(targetIntent, name)
+        }
     }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    fun createPinnedShortcut(intent: Intent, name: String): Boolean {
+        val mShortcutManager = getSystemService(ShortcutManager::class.java)
+
+        if (mShortcutManager.isRequestPinShortcutSupported()) {
+            // Assumes there's already a shortcut with the ID "my-shortcut".
+            // The shortcut must be enabled.
+            val pinShortcutInfo = ShortcutInfo.Builder(this, "jota-plus-shortcut$name")
+                    .setShortLabel(name)
+                    .setIntent(intent)
+                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_shortcut))
+                    .build()
+
+            // Create the PendingIntent object only if your app needs to be notified
+            // that the user allowed the shortcut to be pinned. Note that, if the
+            // pinning operation fails, your app isn't notified. We assume here that the
+            // app has implemented a method called createShortcutResultIntent() that
+            // returns a broadcast intent.
+            val pinnedShortcutCallbackIntent = mShortcutManager.createShortcutResultIntent(pinShortcutInfo)
+
+            // Configure the intent so that your app's broadcast receiver gets
+            // the callback successfully.
+            val successCallback = PendingIntent.getBroadcast(this, 0, pinnedShortcutCallbackIntent, 0)
+
+            mShortcutManager.requestPinShortcut(pinShortcutInfo, successCallback.intentSender)
+            return true
+        }
+        return false
+    }
+
 
     private fun load()
     {
-        type_departure.setChecked( settings.type_departure )
-        type_arrival .setChecked( settings.type_arrival )
-        type_first .setChecked( settings.type_first )
-        type_last .setChecked( settings.type_last )
+        type_departure.setChecked( settings.typeDeparture )
+        type_arrival .setChecked( settings.typeArrival )
+        type_first .setChecked( settings.typeFirst )
+        type_last .setChecked( settings.typeLast )
 
-        sort_time .setChecked( settings.sort_time )
-        sort_fare .setChecked( settings.sort_fare )
-        sort_num .setChecked( settings.sort_num )
+        sort_time .setChecked( settings.sortTime )
+        sort_fare .setChecked( settings.sortFare )
+        sort_num .setChecked( settings.sortNum )
 
-        ticket_ic .setChecked( settings.ticket_ic )
-        ticket_normal .setChecked( settings.ticket_normal )
+        ticket_ic .setChecked( settings.ticketIc )
+        ticket_normal .setChecked( settings.ticketNormal )
 
-        express .setChecked( settings.express )
-        shinkansen .setChecked( settings.shinkansen )
-        airline .setChecked( settings.airline )
-        highwaybus .setChecked( settings.highwaybus )
-        localbus .setChecked( settings.localbus )
-        ferry .setChecked( settings.ferry )
+        express .setChecked( settings.Express )
+        shinkansen .setChecked( settings.Shinkansen )
+        airline .setChecked( settings.Airline )
+        highwaybus .setChecked( settings.highwayBus )
+        localbus .setChecked( settings.localBus )
+        ferry .setChecked( settings.Ferry )
 
-        walkspeed.setSelection( settings.walkspeed )
+        walkspeed.setSelection( settings.walkSpeed )
     }
 
     private fun save()
     {
         settings.edit {
-            settings.type_departure = type_departure.isChecked()
-            settings.type_arrival = type_arrival.isChecked()
-            settings.type_first = type_first.isChecked()
-            settings.type_last = type_last.isChecked()
+            settings.typeDeparture = type_departure.isChecked()
+            settings.typeArrival = type_arrival.isChecked()
+            settings.typeFirst = type_first.isChecked()
+            settings.typeLast = type_last.isChecked()
 
-            settings.sort_time = sort_time.isChecked()
-            settings.sort_fare = sort_fare.isChecked()
-            settings.sort_num = sort_num.isChecked()
+            settings.sortTime = sort_time.isChecked()
+            settings.sortFare = sort_fare.isChecked()
+            settings.sortNum = sort_num.isChecked()
 
-            settings.ticket_ic = ticket_ic.isChecked()
-            settings.ticket_normal = ticket_normal.isChecked()
+            settings.ticketIc = ticket_ic.isChecked()
+            settings.ticketNormal = ticket_normal.isChecked()
 
-            settings.express = express.isChecked()
-            settings.shinkansen = shinkansen.isChecked()
-            settings.airline = airline.isChecked()
-            settings.highwaybus = highwaybus.isChecked()
-            settings.localbus = localbus.isChecked()
-            settings.ferry = ferry.isChecked()
+            settings.Express = express.isChecked()
+            settings.Shinkansen = shinkansen.isChecked()
+            settings.Airline = airline.isChecked()
+            settings.highwayBus = highwaybus.isChecked()
+            settings.localBus = localbus.isChecked()
+            settings.Ferry = ferry.isChecked()
 
-            settings.walkspeed = walkspeed.getSelectedItemPosition()
+            settings.walkSpeed = walkspeed.getSelectedItemPosition()
         }
     }
 }

@@ -3,19 +3,16 @@ package jp.gr.aqua.rosen
 import android.view.View
 import android.widget.Adapter
 import android.widget.AdapterView
-import android.widget.CompoundButton
 import android.widget.TextView
 import com.jakewharton.rxbinding.view.RxView
-import com.jakewharton.rxbinding.view.ViewClickEvent
-import com.jakewharton.rxbinding.view.ViewLongClickEvent
 import com.jakewharton.rxbinding.widget.*
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Action1
 import rx.schedulers.Schedulers
 
-public inline fun View.clickEvents(): Observable<ViewClickEvent> = RxView.clickEvents(this)
-public inline fun View.longClickEvents(): Observable<ViewLongClickEvent> = RxView.longClickEvents(this)
+
+public inline fun View.clickEvents(): Observable<Void> = RxView.clicks(this)
+public inline fun View.longClickEvents(): Observable<Void> = RxView.longClicks(this)
 public inline fun TextView.textChanges(): Observable<CharSequence> = RxTextView.textChanges(this)
 public inline fun TextView.editorActionEvents(): Observable<TextViewEditorActionEvent> = RxTextView.editorActionEvents(this)
 public inline fun <T : Adapter> AdapterView<T>.itemClickEvents(): Observable<AdapterViewItemClickEvent> = RxAdapterView.itemClickEvents(this)
